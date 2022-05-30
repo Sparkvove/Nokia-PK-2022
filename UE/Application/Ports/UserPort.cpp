@@ -73,6 +73,10 @@ namespace ue {
         return gui.setDialMode();
     }
 
+    IUeGui::ICallMode &UserPort::talkingMode() {
+        return gui.setCallMode();
+    }
+
     int UserPort::getMenuIndex() {
         return menuIndex;
     }

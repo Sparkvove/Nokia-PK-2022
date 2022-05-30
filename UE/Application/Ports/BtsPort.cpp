@@ -73,6 +73,20 @@ namespace ue
                     break;
                 }
 
+                case common::MessageId::CallAccepted:
+                {
+                    std::string text = reader.readRemainingText();
+                    handler->handleAcceptCall(from);
+                    break;
+                }
+
+                case common::MessageId::CallTalk:
+                {
+                    std::string text = reader.readRemainingText();
+                    handler->handleTalkMessage(text,from);
+                    break;
+                }
+
                 default:
                     logger.logError("unknow message: ", msgId, ", from: ", from);
 
@@ -90,8 +104,19 @@ namespace ue
         transport.sendMessage(outgoingMessage.getMessage());
     }
 
+    void BtsPort::talk(common::PhoneNumber receiverPhoneNumber, std::string talkText) {
+        common::OutgoingMessage outgoingMessage = common::OutgoingMessage(common::MessageId::CallTalk, phoneNumber, receiverPhoneNumber);
+        outgoingMessage.writeText(talkText);
+        transport.sendMessage(outgoingMessage.getMessage());
+    }
+
     void BtsPort::makeCall(common::PhoneNumber receiverPhoneNumber) {
         common::OutgoingMessage outgoingMessage{common::MessageId::CallRequest,phoneNumber,receiverPhoneNumber};
+        transport.sendMessage(outgoingMessage.getMessage());
+    }
+
+    void BtsPort::acceptCall(common::PhoneNumber callerPhoneNumber) {
+        common::OutgoingMessage outgoingMessage{common::MessageId::CallAccepted,phoneNumber,callerPhoneNumber};
         transport.sendMessage(outgoingMessage.getMessage());
     }
 

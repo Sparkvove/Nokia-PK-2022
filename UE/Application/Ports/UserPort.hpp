@@ -32,6 +32,8 @@ namespace ue {
 
         IUeGui::IDialMode &dialComposeMode() override;
 
+        IUeGui::ICallMode &talkingMode() override;
+
         IUeGui::ITextMode &callFromMode(const common::PhoneNumber callerNumber) override;
 
         IUeGui::ITextMode &callToMode(const common::PhoneNumber receiverNumber) override;

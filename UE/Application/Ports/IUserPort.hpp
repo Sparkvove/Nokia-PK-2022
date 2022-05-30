@@ -32,6 +32,8 @@ namespace ue {
 
         virtual IUeGui::IDialMode& dialComposeMode() = 0;
 
+        virtual IUeGui::ICallMode& talkingMode() = 0;
+
         virtual IUeGui::ITextMode& callFromMode(const common::PhoneNumber callerNumber) = 0;
 
         virtual IUeGui::ITextMode& callToMode(const common::PhoneNumber receiverNumber) = 0;
