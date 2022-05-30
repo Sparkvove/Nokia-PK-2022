@@ -50,8 +50,20 @@ namespace ue {
         context.state->handleDropCall(callerNumber);
     }
 
+    void Application::handleAcceptCall(const common::PhoneNumber callerNumber) {
+        context.state->handleAcceptCall(callerNumber);
+    }
+
     void Application::makeDropCall(const common::PhoneNumber callerNumber) {
         context.state->makeDropCall(callerNumber);
+    }
+
+    void Application::makeAcceptCall(const common::PhoneNumber callerNumber) {
+        context.state->makeAcceptCall(callerNumber);
+    }
+
+    void Application::handleTalkMessage(const std::string talkText, const common::PhoneNumber senderNumber) {
+        context.state->handleTalkMessage(talkText, senderNumber);
     }
 
 }
