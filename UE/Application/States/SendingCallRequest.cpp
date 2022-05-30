@@ -1,12 +1,15 @@
 #include "ConnectedState.hpp"
 #include "SendingCallRequest.hpp"
+#include "TalkingState.hpp"
+#include "NotConnectedState.hpp"
 
 namespace ue {
 
-    SendingCallRequestState::SendingCallRequestState(Context &context): BaseState(context, "SendingCallRequestState"),
+    SendingCallRequestState::SendingCallRequestState(Context &context, int notification): BaseState(context, "SendingCallRequestState"),
     dialMode(context.user.dialComposeMode()) {
         context.user.acceptCallback([this] { onAcceptCallbackClicked(); });
         context.user.rejectCallback([this] { onDeclineCallbackClicked(); });
+        this->notification = notification;
     }
 
     void SendingCallRequestState::onAcceptCallbackClicked() {
@@ -26,12 +29,33 @@ namespace ue {
     }
 
     void SendingCallRequestState::handleDropCall(const common::PhoneNumber callerNumber) {
-        context.setState<ConnectedState>(0);
+        context.setState<ConnectedState>(notification);
     }
 
     void SendingCallRequestState::makeDropCall(const common::PhoneNumber callerNumber) {
         context.bts.declineCall(callerNumber);
         context.logger.logInfo("Dropping call from "+ common::to_string(callerNumber));
-        context.setState<ConnectedState>(0);
+        context.setState<ConnectedState>(notification);
     }
+
+    void SendingCallRequestState::handleAcceptCall(const common::PhoneNumber callerNumber) {
+        context.setState<TalkingState>(callerNumber,notification);
+    }
+
+    void SendingCallRequestState::handleDisconnected() {
+        context.setState<NotConnectedState>();
+    }
+
+    void SendingCallRequestState::handleSMSReceive(const std::string smsText, const common::PhoneNumber senderNumber) {
+        this->notification = 1;
+        SMS sms1 = SMS(smsText, senderNumber, "received");
+        SMS_DB ourDataBase = context.user.getSmsDB();
+        ourDataBase.addSmsToDB(sms1);
+        context.user.setSmsDB(ourDataBase);
+    }
+
+    void SendingCallRequestState::handleCallRequest(const common::PhoneNumber callerNumber) {
+        context.bts.declineCall(callerNumber);
+    }
+
 }

@@ -1,5 +1,7 @@
 #include "ConnectedState.hpp"
 #include "SendingSmsState.hpp"
+#include "ReceivingCallRequest.hpp"
+#include "NotConnectedState.hpp"
 
 namespace ue {
 
@@ -36,6 +38,14 @@ namespace ue {
         SMS_DB ourDataBase = context.user.getSmsDB();
         ourDataBase.addSmsToDB(sms);
         context.user.setSmsDB(ourDataBase);
+    }
+
+    void SendingSmsState::handleCallRequest(const common::PhoneNumber callerNumber) {
+        context.setState<ReceivingCallRequest>(callerNumber,notification);
+    }
+
+    void SendingSmsState::handleDisconnected() {
+        context.setState<NotConnectedState>();
     }
 
 }
