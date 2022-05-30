@@ -23,10 +23,10 @@ namespace ue {
         }
         if (currentMenuIndex == 1) {
             this->notification = 0;
-            context.setState<ViewingSmsState>();
+            context.setState<ViewingSmsState>(notification);
         }
         if (currentMenuIndex == 2) {
-            context.setState<SendingCallRequestState>();
+            context.setState<SendingCallRequestState>(notification);
         }
     }
 
@@ -46,7 +46,7 @@ namespace ue {
     }
 
     void ConnectedState::handleCallRequest(const common::PhoneNumber callerNumber) {
-        context.setState<ReceivingCallRequest>(callerNumber);
+        context.setState<ReceivingCallRequest>(callerNumber, notification);
     }
 
 }

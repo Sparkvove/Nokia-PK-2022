@@ -47,4 +47,16 @@ namespace ue {
     void BaseState::handleDropCall(const common::PhoneNumber callerNumber) {
         logger.logError("Uexpected: handleDropCall");
     }
+
+    void BaseState::handleAcceptCall(const common::PhoneNumber callerNumber) {
+        logger.logError("Uexpected: handleAcceptCall");
+    }
+
+    void BaseState::makeAcceptCall(const common::PhoneNumber callerNumber) {
+        logger.logError("Uexpected: makeAcceptCall");
+    }
+
+    void BaseState::handleTalkMessage(const std::string talkText, const common::PhoneNumber senderNumber) {
+        logger.logError("Uexpected: handleTalkMessage");
+    }
 }

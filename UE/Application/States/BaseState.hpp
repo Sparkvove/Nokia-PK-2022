@@ -4,13 +4,12 @@
 #include "Logger/PrefixedLogger.hpp"
 #include "Context.hpp"
 
-namespace ue
-{
+namespace ue {
 
-    class BaseState : public IEventsHandler
-    {
+    class BaseState : public IEventsHandler {
     public:
-        BaseState(Context& context, const std::string& name);
+        BaseState(Context &context, const std::string &name);
+
         ~BaseState() override;
 
         // ITimerEventsHandler interface
@@ -18,16 +17,29 @@ namespace ue
 
         // IBtsEventsHandler interface
         void handleDisconnected() override;
+
         void handleSib(common::BtsId btsId) override;
+
         void handleAttachAccept() override;
+
         void handleAttachReject() override;
+
         void handleSMSReceive(const std::string smsText, const common::PhoneNumber senderNumber) override;
+
         void handleCallRequest(const common::PhoneNumber callerNumber) override;
+
         void handleDropCall(const common::PhoneNumber callerNumber) override;
+
+        void handleAcceptCall(const common::PhoneNumber callerNumber) override;
+
         void makeDropCall(const common::PhoneNumber callerNumber) override;
 
+        void makeAcceptCall(const common::PhoneNumber callerNumber) override;
+
+        void handleTalkMessage(const std::string talkText, const common::PhoneNumber senderNumber) override;
+
     protected:
-        Context& context;
+        Context &context;
         common::PrefixedLogger logger;
     };
 

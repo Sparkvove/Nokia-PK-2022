@@ -6,7 +6,9 @@ namespace ue {
 
     class ViewingSmsState : public BaseState {
     public:
-        ViewingSmsState(Context &context);
+        ViewingSmsState(Context &context, int notification);
+
+        int notification = 0;
 
     protected:
 
@@ -15,5 +17,9 @@ namespace ue {
         void onDeclineCallbackClicked();
 
         void handleSMSReceive(const std::string smsText, const common::PhoneNumber senderNumber);
+
+        void handleDisconnected() override;
+
+        void handleCallRequest(const common::PhoneNumber callerNumber);
     };
 }
