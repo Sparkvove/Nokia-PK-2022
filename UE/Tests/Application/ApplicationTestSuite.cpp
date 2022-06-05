@@ -5,22 +5,24 @@
 #include "Mocks/ILoggerMock.hpp"
 #include "Mocks/IBtsPortMock.hpp"
 #include "Mocks/IUserPortMock.hpp"
+#include "Mocks/SMSDBMock.hpp"
 #include "Mocks/ITimerPortMock.hpp"
 #include "Messages/PhoneNumber.hpp"
 #include <memory>
 
-namespace ue
-{
+namespace ue {
     using namespace ::testing;
 
-    class ApplicationTestSuite : public Test
-    {
+    class ApplicationTestSuite : public Test {
     protected:
         const common::PhoneNumber PHONE_NUMBER{112};
+        const common::PhoneNumber PHONE_NUMBER2{113};
         const common::BtsId BTS_ID{42};
+        const std::string MESSAGE = "Hello World";
         NiceMock<common::ILoggerMock> loggerMock;
         StrictMock<IBtsPortMock> btsPortMock;
-        StrictMock<IUserPortMock> userPortMock;
+        NiceMock<IUserPortMock> userPortMock;
+        NiceMock<SMSDBMock> smsDbMock;
         StrictMock<ITimerPortMock> timerPortMock;
 
         Expectation expectNotConnected = EXPECT_CALL(userPortMock, showNotConnected());
@@ -50,9 +52,6 @@ namespace ue
         requestAttachOnSib();
     }
 
-
-
-
     struct ApplicationConnectingTestSuite : ApplicationNotConnectedTestSuite
     {
         ApplicationConnectingTestSuite();
@@ -66,7 +65,7 @@ namespace ue
     TEST_F(ApplicationConnectingTestSuite, shallCompleteAttachWhenAttachAccepted)
     {
         EXPECT_CALL(timerPortMock, stopTimer());
-        EXPECT_CALL(userPortMock, showConnected());
+        EXPECT_CALL(userPortMock, showConnected(0));
         objectUnderTest.handleAttachAccept();
     }
 
@@ -83,8 +82,6 @@ namespace ue
         objectUnderTest.handleTimeout();
     }
 
-
-
     struct ApplicationConnectedTestSuite : ApplicationConnectingTestSuite
     {
         ApplicationConnectedTestSuite();
@@ -93,7 +90,7 @@ namespace ue
     ApplicationConnectedTestSuite::ApplicationConnectedTestSuite()
     {
         EXPECT_CALL(timerPortMock, stopTimer());
-        EXPECT_CALL(userPortMock, showConnected());
+        EXPECT_CALL(userPortMock, showConnected(0));
         objectUnderTest.handleAttachAccept();
     }
 
